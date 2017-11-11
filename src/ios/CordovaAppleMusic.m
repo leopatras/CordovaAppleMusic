@@ -64,6 +64,23 @@
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
     [self.commandDelegate sendPluginResult:result callbackId:callbackId];
 }
+
+- (void)playID:(CDVInvokedUrlCommand*)command
+{
+    NSString* callbackId = [command callbackId];
+    NSString* songId = [[command arguments] objectAtIndex:0];
+    MPMediaPropertyPredicate *songIdPredicate =
+    [MPMediaPropertyPredicate predicateWithValue:songId
+                                     forProperty:MPMediaItemPropertyPersistentID];
+    MPMediaQuery *mySongQuery = [MPMediaQuery songsQuery];
+    [mySongQuery addFilterPredicate:songIdPredicate];
+    MPMusicPlayerController *musicPlayer = [MPMusicPlayerController systemMusicPlayer];
+    [musicPlayer setQueueWithQuery:mySongQuery];
+    [musicPlayer play];
+    CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+    [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+}
+
 -(void)getCountryCode:(CDVInvokedUrlCommand*)command
 {
     NSString* callbackId = [command callbackId];
